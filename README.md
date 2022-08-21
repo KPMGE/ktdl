@@ -14,3 +14,8 @@ ktdl add "text of your TODO"
 ```bash
 ktdl list 
 ```
+
+#### remove a TODO
+```bash
+ktdl rm <index>
+```

@@ -12,7 +12,7 @@ fn add_todo(data: &str) {
     .open(TODO_FILE)
     .unwrap();
 
-  if let Err(e) = writeln!(file, "#TODO {}\n", data) {
+  if let Err(e) = writeln!(file, "{}", data) {
     eprintln!("Couldn't write to file: {}", e);
   }
 }
@@ -44,10 +44,8 @@ fn remove_todo(idx: usize) {
     }
   }
 
-  if todos.len() == 1 {
-    if let Err(e) = std::fs::write(TODO_FILE, "") {
-      panic!("{}", e);
-    }
+  if let Err(e) = std::fs::write(TODO_FILE, "") {
+    panic!("{}", e);
   }
 
   for (i, td) in todos.iter().rev().enumerate() {
@@ -55,9 +53,7 @@ fn remove_todo(idx: usize) {
       println!("todo: {td} gone!");
       continue;
     }
-    if let Err(e) = std::fs::write(TODO_FILE, format!("{}\n", td)) {
-      panic!("{}", e);
-    }
+    add_todo(format!("{}\n", td).as_str());
   }
 }
 
@@ -83,7 +79,7 @@ fn main() {
     },
     "add" => {
       match std::env::args().nth(2) {
-        Some(todo) => add_todo(todo.as_str()),
+        Some(todo) => add_todo(format!("#TODO {}\n", todo.as_str()).as_str()),
         None => eprintln!("Usage: ktdl (list | add | rm) <content | idx>"),
       };
     }
